@@ -1,17 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { Link} from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import Header from "../Homepage/Header";
+import bgImg from "../../Images/first.png";
 
 // use reducer
 
 const ProductCart = () => {
   const [pdata, setProductData] = useState([]);
-  const [totalprice, setTotalPrice] = useState("")
-  const [message, setMessage] = useState("")
-  
-  
+  const [totalprice, setTotalPrice] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     axios
@@ -24,31 +23,28 @@ const ProductCart = () => {
         console.log(err);
       });
 
-      // for total price
-      setTotalPrice(
-        pdata.reduce(
-          (acc, curr) => acc + Number(curr.productId.pqty * curr.productId.pprice),
-          0
-        )
-      );
-  }, );
+    // for total price
+    setTotalPrice(
+      pdata.reduce(
+        (acc, curr) =>
+          acc + Number(curr.productId.pqty * curr.productId.pprice),
+        0
+      )
+    );
+  });
 
   function deleteproductCart(pid) {
-
     axios
 
       .delete("http://localhost:5000/deleteitem/" + pid)
 
       .then((e) => {
-        setMessage("Item delete successfully!")
+        setMessage("Item delete successfully!");
       })
 
       .catch((e) => {
-
         console.log(e);
-
       });
-
   }
 
   const headers = [
@@ -60,19 +56,38 @@ const ProductCart = () => {
     { key: "action", label: "Action" },
   ];
 
- 
-
   return (
     <>
+      <div
+        className="container-fluid homeImg py-3"
+        style={{
+          paddingTop: 70,
+          backgroundColor: "#ebebeb",
+          background: `url(${bgImg})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "50vh",
+          backgroundSize: "cover",
+          position: "relative",
+        }}
+      >
+        <Header />
+
+        <div className="bread-crumb-section">
+          <h1 className="text-center text-white my-4 fw-bold">Cart</h1>
+          <div className="row text-center">
+            <Link className="text-success fw-bold text-decoration-none" to="/">
+              Home &gt;&gt; <span className="text-white">Cart</span>
+            </Link>
+          </div>
+        </div>
+      </div>
       {/* implementing conditions for products in cart */}
       {pdata.length === 0 ? (
         <div className="check_cart container">
           <div className="row">
             <div className="col-md-10 col-12">
-              <Link
-                to="/display-all-products"
-                className="btn btn-info"
-              >
+              <Link to="/display-all-products" className="btn btn-info">
                 Add Product
               </Link>
               <h3 className="m-5">There is no any products in your cart !!!</h3>
@@ -204,19 +219,18 @@ const ProductCart = () => {
                                             marginLeft: "30px",
                                           }}
                                         >
-                                          {items.productId.pqty * items.productId.pprice}
+                                          {items.productId.pqty *
+                                            items.productId.pprice}
                                         </span>
                                       </td>
 
-                                     
-    
-
                                       <td>
                                         <i
-                                          className="bi bi-trash-fill"  onClick={deleteproductCart.bind(
-                                              this,
-                                              items._id
-                                            )} 
+                                          className="bi bi-trash-fill"
+                                          onClick={deleteproductCart.bind(
+                                            this,
+                                            items._id
+                                          )}
                                           style={{
                                             cursor: "pointer",
                                             color: "red",

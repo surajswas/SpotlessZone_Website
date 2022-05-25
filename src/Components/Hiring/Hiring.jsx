@@ -2,6 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import bgImage from "../../Images/job-image.jpg";
+import bgImg from "../../Images/first.png";
+import Header from "../Homepage/Header";
+import { Link } from "react-router-dom";
 
 const Hiring = () => {
   const [fullName, setFullName] = useState("");
@@ -39,7 +42,31 @@ const Hiring = () => {
   return (
     <>
       <div
-        className="container-fluid"
+        className="container-fluid homeImg py-3"
+        style={{
+          paddingTop: 70,
+          backgroundColor: "#ebebeb",
+          background: `url(${bgImg})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "40vh",
+          backgroundSize: "cover",
+          position: "relative",
+        }}
+      >
+        <Header />
+
+        <div className="bread-crumb-section">
+          <h1 className="text-center text-white my-4 fw-bold">Job Form</h1>
+          <div className="row text-center">
+            <Link className="text-success fw-bold text-decoration-none" to="/">
+              Home &gt;&gt; <span className="text-white">Job Form</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div
+        className="container-fluid my-5"
         style={{
           backgroundRepeat: "no-repeat",
           background: `url(${bgImage})`,
@@ -54,11 +81,11 @@ const Hiring = () => {
           <div className="col-md-12">
             <div className="row  justify-content-center">
               <h1 className="text-center py-5" style={{ color: "#1F8977" }}>
-                Find A Job & Grow Your Career With Us
+                Find A Job &amp; Grow Your Career With Us
               </h1>
               <div className="col-md-6">
                 <div
-                  className="card"
+                  className="card mb-3"
                   style={{
                     backgroundColor: "transparent",
                   }}
@@ -70,7 +97,7 @@ const Hiring = () => {
                     className="align-items-center"
                   >
                     {/* input field for full name */}
-                    <div className="form-group px-5 py-3">
+                    <div className="form-group px-5 py-4">
                       <label htmlFor="fullName" style={{ fontWeight: "bold" }}>
                         Full Name <span className="text-danger">*</span>
                       </label>
@@ -125,6 +152,9 @@ const Hiring = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
+                      <small className="text-muted fst-italic">
+                        We'll send you relevant Jobs in your Email
+                      </small>
                       {errors.setEmail && (
                         <small className="text-danger">
                           {errors.setEmail.message}
@@ -165,6 +195,10 @@ const Hiring = () => {
                         value={contact}
                         onChange={(e) => setPhone(e.target.value)}
                       />
+                      <small className="text-muted fst-italic">
+                        Recruiter will call you on this number
+                      </small>
+
                       {errors.setPhone && (
                         <small className="text-danger">
                           {errors.setPhone.message}
@@ -193,6 +227,25 @@ const Hiring = () => {
                         </small>
                       )}
                     </div>
+
+                    <p className="text-center fst-italic py-3 text-white">
+                      <span>
+                        Recruiters give first preference to candidates who have
+                        a resume
+                      </span>
+                    </p>
+
+                    <p className="text-white fst-italic text-center">
+                      <small>
+                        By Clicking Submit, You Agree To The{" "}
+                        <span className="text-success fw-bold">
+                          Terms And Conditions{" "}
+                          <span className="text-white">&amp; </span>Privacy
+                          Policy
+                        </span>{" "}
+                        Of SpotlessZone.com
+                      </small>
+                    </p>
 
                     <button
                       type="submit"

@@ -2,6 +2,8 @@ import styles from "./styles.module.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Header from "../Homepage/Header";
+import bgImg from "../../Images/first.png"
 
 const SignUp = () => {
   //using useState hook
@@ -41,11 +43,41 @@ const SignUp = () => {
 
   return (
     <>
+     <div
+        className="container-fluid homeImg py-3"
+        style={{
+          paddingTop: 70,
+          backgroundColor: "#ebebeb",
+          background: `url(${bgImg})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "40vh",
+          backgroundSize: "cover",
+          position: "relative",
+        }}
+      >
+        <Header />
+
+        <div className="bread-crumb-section">
+          <h1 className="text-center text-white my-4 fw-bold">Register Page</h1>
+          <div className="row text-center">
+            <Link className="text-success fw-bold text-decoration-none" to="/">
+              Home &gt;&gt; <span className="text-white">Register</span>
+            </Link>
+          </div>
+        </div>
+      </div>
       <div className={styles.signup_container}>
         <div className={styles.signup_form_container}>
           <div className={styles.left}>
             <h1>Welcome Back !</h1>
-            <span style={{textAlign: "center", color: "#fff", marginBottom: "2rem"}}>
+            <span
+              style={{
+                textAlign: "center",
+                color: "#fff",
+                marginBottom: "2rem",
+              }}
+            >
               To Keep Connected With Us <br />
               Please Login With Your Personal Info
             </span>
@@ -185,3 +217,4 @@ const SignUp = () => {
 };
 
 export default SignUp;
+

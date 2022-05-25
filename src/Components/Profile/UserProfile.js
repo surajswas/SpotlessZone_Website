@@ -1,11 +1,36 @@
+
+import axios from 'axios'
 import React from 'react'
 import { Link } from 'react-router-dom'
-
 const UserProfile = () => {
+
+    function parseJwt(token) {
+        if (!token) { return; }
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
+        return JSON.parse(window.atob(base64));
+    }
+    // get user form the token
+    const token_data = localStorage.getItem("token")
+    const token = parseJwt(token_data)
+    const id = token?.user._id
+
+    const [userdata, setuserdata] = React.useState({})
+
+    const getProfile = () => {
+        axios.get('http://localhost:5000/getprofile/' + id).then(data => {
+            setuserdata(data.data)
+        })
+    }
+    React.useEffect(() => {
+        getProfile()
+    }, [])
+
+
     return (
         <>
-            <div className="container col-md-5 col-sm-12 col-12 bg-white shadow rounded py-4 px-4">
-                <h1 className="text text-secondary h6">My Profile</h1>
+            <div className="container col-md-5 col-sm-12 col-12 bg-lighte shadow rounded py-4 px-4">
+                {/* <h1 className="text text-secondary h6">My Profile</h1> */}
                 <div className="pp-section text-center">
                     <div className="position-relative">
                         <img
@@ -27,33 +52,22 @@ const UserProfile = () => {
                             </button>
                         </div>
                     </div>
-                    <p className="text text-secondary mb-1 fw-bold h5">Spotlesszone</p>
-                    <Link to="/edit-profile" className="text-decoration-none text-success">
+                    <p className="text text-secondary mb-1 fw-bold h5">{userdata?.name}</p>
+                    <small className="text text-secondary d-block text-center mb-4">{userdata?.email}</small>
+                    <Link to="/edit-profile" className="text-decoration-none" style={{ color: "#25C6AA" }}>
                         Edit Profile
                     </Link>
                 </div>
                 <hr />
                 <div className="history">
-                    <div className="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-bag-fill me-2"></i>
-                        <p className="text text-dark mb-1">Order History</p>
-                    </div>
-                    <div className="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-heart-fill me-2"></i>
-                        <p className="text text-dark mb-1">Favourites</p>
-                    </div>
-                    <div className="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-star-fill me-2"></i>
-                        <p className="text text-dark mb-1">Review</p>
-                    </div>
-                    <div className="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-geo-alt-fill me-2"></i>
-                        <p className="text text-Review mb-1">Saved Addresses</p>
-                    </div>
+                    <p className="text tex-secondary h5 text-center">Bio</p>
+                    <p className="text text-secondary">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, voluptate! Non vero mollitia corporis nulla?
+                    </p>
                 </div>
                 <hr />
                 <div className="flex justify-content-center align-items-center text-center">
-                    <button className="btn btn-link text-decoration-none text-success">
+                    <button className="btn btn-link text-decoration-none" style={{ color: "#25C6AA" }}>
                         Logout
                     </button>
                 </div>
