@@ -104,7 +104,7 @@ const AllCommercialServices = () => {
                     className="commercial-service-card card m-3 "
                     style={{
                       cursor: "pointer",
-                      boxShadow: "2px 2px 2px 2px #94FFFF",
+                      boxShadow: "2px 2px 2px 2px #25C6AA",
                       height: "50vh",
                     }}
                   >
@@ -124,7 +124,7 @@ const AllCommercialServices = () => {
                       </div>
                       <Link
                         to={`/single-service/${cData._id}`}
-                        className="btn btn-info text-center text-white text-uppercase mb-3 fw-bold float-end w-24"
+                        className="btn text-center text-white text-uppercase mb-3 fw-bold float-end w-24" style={{backgroundColor: "teal"}}
                       >
                         Read More &gt;&gt;
                       </Link>

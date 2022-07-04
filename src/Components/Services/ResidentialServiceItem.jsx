@@ -8,7 +8,7 @@ const ResidentialServiceItem = ({ rData }) => {
       >
         <h6
           className="text-center fw-bold pt-4"
-          style={{ fontSize: "1.5rem", paddingLeft: "70px" }}
+          style={{ fontSize: "1.5rem", paddingLeft: "70px", marginTop: "1rem" }}
         >
           {rData.serviceName}
         </h6>
@@ -17,14 +17,14 @@ const ResidentialServiceItem = ({ rData }) => {
           alt="image"
           className="img-fluid rounded-circle me-5"
           style={{
-            width: "150px",
-            height: "150px",
-            position: "relative",
-            right: "40px",
-            bottom: "40px",
+            width: "120px",
+            height: "120px",
+            position: "absolute",
+            left: "-2rem",
+            bottom: "12rem",
           }}
         />
-        <p className="ps-3">{rData.serviceDesc}</p>
+        <p className="ps-3" style={{marginTop: "5rem"}}>{rData.serviceDesc}</p>
         {/* <a
           href="/all-services"
           className="ms-auto p-3 text-info text-decoration-none fw-bold fst-italic"

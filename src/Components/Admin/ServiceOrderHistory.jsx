@@ -19,15 +19,6 @@ const ServiceOrderHistory = ({ adminData }) => {
   // const { pid } = useParams();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/get/product")
-      .then((result) => {
-        // console.log(result.data.pname);
-        setProductData(result.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
     // for all order services data
     axios
@@ -89,7 +80,6 @@ const ServiceOrderHistory = ({ adminData }) => {
         console.log("error occur");
       });
 
-    // for total number of registered users
     axios
       .get("http://localhost:5000/get-total-products-cart")
       .then((response) => {

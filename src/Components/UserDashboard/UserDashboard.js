@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import UserHeader from "./UserHeader";
 import bgImg from "../../Images/first.png";
 
-const UserDashboard = () => {
+const UserDashboard = ({userData}) => {
   // console.log(userData._id)
   function parseJwt(token) {
     if (!token) {
@@ -17,12 +17,12 @@ const UserDashboard = () => {
   const token_data = localStorage.getItem("token");
   const token = parseJwt(token_data);
   // const userId = token?.user._id
-  const user = token?.user._id;
+  const user = token?.user?._id;
+  // console.log(userData?.pic)
 
 
   const [points, setPoints] = useState(user.points);
   const [rewarded, setRewarded] = useState({ rewarded: false, reward: 0 });
-  console.log(user.points);
   // get user form the token
 
   const handleLogout = (e) => {
@@ -38,9 +38,9 @@ const UserDashboard = () => {
       setPoints(res.data.points);
       setRewarded({ rewarded: res.data.rewarded, reward: res.data.reward });
     });
-  }, [rewarded]);
+  }, [rewarded, userData]);
 
-  
+
 
   
 
@@ -132,21 +132,23 @@ const UserDashboard = () => {
             </div>
             <div className="">
               <div>
-                {token.user && token?.user?.pic ? (
+                {userData && userData.pic ? (
                   <img
-                    src={`http://localhost:5000/${token?.user?.pic}`}
-                    className="img-fluid"
+                    src={`http://localhost:5000/${userData.pic}`}
                     alt=""
-                    width={`100`}
-                    height={`100`}
+                    width="100px"
+                    height = "100px"
+                    // className="img-fluid"
+
                     style={{ borderRadius: "100%" }}
                   />
                 ) : (
                   <img
                     src="https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-20.jpg"
                     alt=""
-                    width={`100`}
-                    height={`100`}
+                    width="100px"
+                    height = "100px"
+                    // height={`200`}
                     style={{ borderRadius: "100%" }}
                   />
                 )}

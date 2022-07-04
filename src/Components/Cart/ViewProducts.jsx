@@ -130,7 +130,7 @@ const AllProducts = () => {
                     className="card my-3 px-0"
                     style={{
                       cursor: "pointer",
-                      boxShadow: "2px 2px 2px 2px #94FFFF",
+                      boxShadow: "2px 2px 2px 2px #25C6AA",
                       height: "400px",
                     }}
                   >
@@ -163,7 +163,7 @@ const AllProducts = () => {
                       <Link
                         to={"/single-product/" + allProductsdata._id}
                         className="btn btn-info text-center w-75 ms-5 text-white text-uppercase my-3"
-                        style={{ fontWeight: "bold" }}
+                        style={{ fontWeight: "bold", backgroundColor: "teal" }}
                       >
                         Details
                       </Link>

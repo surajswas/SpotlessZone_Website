@@ -60,6 +60,10 @@ import ServiceSearch from "../Components/Search/ServiceSearch";
 import ProductOrderHistory from "../Components/Profile/ProductOrderHistory";
 import ProductWishlist from "../Components/Wishlist/ProductWishlist";
 import AddressBook from "../Components/Profile/AddressBook";
+import AdminProductOrderHistory from "../Components/Admin/AdminProductOrderHistory";
+import AddAddressBook from "../Components/Profile/AddAddressBook";
+import ReviewPage from "../Components/Profile/reviewPage";
+import EditAddress from "../Components/Profile/EditAddress";
 
 
 export const Container = () => {
@@ -133,6 +137,11 @@ export const Container = () => {
               path="/product-order-history"
               element={<ProductOrderHistory />}
             ></Route>
+<Route
+              path="/all-product-order-history"
+              element={<AdminProductOrderHistory adminData={decodeUser.user} />}
+            ></Route>
+
 
             <Route
               path="/add-service-category"
@@ -175,6 +184,12 @@ export const Container = () => {
             <Route path="/product-order-history" element={<ProductOrderHistory />}></Route>
             <Route path="/product-wishlist" element={<ProductWishlist />}></Route>
             <Route path="/address-book" element={<AddressBook />}></Route>
+            <Route path="/add-address-book" element={<AddAddressBook />}></Route>
+            <Route path="/show-own-reviews" element={<ReviewPage />}></Route>
+            <Route path="/edit-address" element={<EditAddress />}></Route>
+
+
+
 
 
 

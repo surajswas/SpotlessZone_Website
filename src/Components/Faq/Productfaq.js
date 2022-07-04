@@ -5,6 +5,10 @@ import MyProductfaq from "./MyProductfaq";
 
 import faq2 from "./images/faq2.jpg"
 import { Link } from "react-router-dom";
+import UserHeader from "../UserDashboard/UserHeader";
+import Header from "../Homepage/Header";
+import bgImg from "../../Images/first.png"
+import { parseJwt } from "../../utils/parseJwt";
 
 
 
@@ -38,14 +42,54 @@ const Productfaq = () => {
         }
     ]
     const [data, setdata] = useState(questions);
+
+    const token_data = localStorage.getItem("token");
+  const token = parseJwt(token_data);
+  const user = token?.user?._id;
     return (
         <>
+         <div
+        className="container-fluid homeImg py-3"
+        style={{
+          paddingTop: 70,
+          backgroundColor: "#ebebeb",
+          background: `url(${bgImg})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "50vh",
+          backgroundSize: "cover",
+          position: "relative",
+        }}
+      >
+        {user ? <UserHeader /> : <Header />}
+
+        <div className="bread-crumb-section">
+          <h1 className="text-center text-white my-4 fw-bold">FAQ</h1>
+          <div className="row text-center">
+            {user ? (
+              <Link
+                className="text-success fw-bold text-decoration-none"
+                to="/user-dashboard"
+              >
+                Dashboard &gt;&gt; <span className="text-white">FAQ</span> &gt;&gt; <span className="text-white">Product</span>
+              </Link>
+            ) : (
+              <Link
+                className="text-success fw-bold text-decoration-none"
+                to="/"
+              >
+                Home &gt;&gt; <span className="text-white">FAQ</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
             <MDBContainer>
 
-                <div className="main">
+                <div className="main my-5 p-4">
                     <div className="row">
                         <div className="heading col-md-4 mt-3">
-                            <h4>Have a <span>Question?</span> </h4>
+                            <h4>Have a <span className="text-white">Question?</span> </h4>
                             <h4>Look here</h4>
                         </div>
 
@@ -129,7 +173,9 @@ const Productfaq = () => {
             <div className="contactus">
                 <h4>Still have a question?</h4>
                 <p>Can't find the answer? please contact us.</p>
-                <button  > Contact Us</button>
+                <Link to="/contactus">
+        <button> Contact Us</button>
+        </Link>
             </div>
         </>
     );

@@ -131,7 +131,6 @@ const AddService = ({ adminData }) => {
         console.log("Something wrong in front-end");
       });
   };
-  <script></script>;
 
   return (
     <>

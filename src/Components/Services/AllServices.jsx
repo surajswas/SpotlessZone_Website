@@ -35,10 +35,10 @@ const AllServices = () => {
           {/* for residential use */}
           <div className="col-md-2 col-12 me-4 ">
             <div
-              className="card shadow-lg mb-2 "
+              className="card shadow-lg mb-2  "
               style={{
                 boxSizing: "border-box",
-                backgroundColor: "#00008B",
+                backgroundColor: "teal",
                 borderRadius: "25px",
                 height: "300px",
               }}
@@ -82,7 +82,7 @@ const AllServices = () => {
               className="card shadow-lg mb-2"
               style={{
                 boxSizing: "border-box",
-                backgroundColor: "#00008B",
+                backgroundColor: "teal",
                 borderRadius: "25px",
                 height: "300px",
               }}

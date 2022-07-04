@@ -134,7 +134,8 @@ const SignUp = () => {
               <span>Or Use Your Gmail For Registration</span>
             </div>
 
-            <form
+            <form 
+            id="registerForm"
               action=""
               className={styles.form_container}
               onSubmit={handleSubmit}
@@ -143,6 +144,7 @@ const SignUp = () => {
               <div className={styles.inputIcons}>
                 <i className="bi bi-person-fill icon"></i>
                 <input
+                id="name"
                   type="text"
                   placeholder="Name"
                   name="name"
@@ -157,6 +159,7 @@ const SignUp = () => {
               <div className={styles.inputIcons}>
                 <i class="bi bi-envelope-fill"></i>
                 <input
+                id="email"
                   type="email"
                   placeholder="Email"
                   name="email"
@@ -171,6 +174,7 @@ const SignUp = () => {
               <div className={styles.inputIcons}>
                 <i class="bi bi-lock-fill"></i>
                 <input
+                id="password"
                   type="password"
                   placeholder="Password"
                   name="password"
@@ -185,6 +189,7 @@ const SignUp = () => {
               <div className={styles.inputIcons}>
                 <i class="bi bi-telephone-fill"></i>
                 <input
+                id="phone"
                   type="phone"
                   placeholder="Phone"
                   name="phone"
@@ -199,6 +204,7 @@ const SignUp = () => {
               {msg && <div className={styles.success_msg}>{msg}</div>}
 
               <button
+              id="registerButton"
                 type="submit"
                 className={styles.green_btn}
                 disabled={
