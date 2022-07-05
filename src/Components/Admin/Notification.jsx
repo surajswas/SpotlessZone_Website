@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
 
-const Notification = ({ adminData }) => {
+const TestNotification = ({ adminData }) => {
   // const { id } = useParams();
   const [unSeenNoti, setUnseenNoti] = useState([]);
   const [allNoti, setAllNoti] = useState([]);
@@ -75,7 +75,7 @@ const Notification = ({ adminData }) => {
   };
   return (
     <>
-      <div className="container-fluid ps-0 py-3">
+      <div className="container-fluid ps-0 py-3" id="notifications">
         <AdminHeader noti={unSeenNoti} productQtyCart={productQtyCart} />
         <div className="row py-4 me-4">
           <AdminSidebar adminData={adminData} />
@@ -100,7 +100,7 @@ const Notification = ({ adminData }) => {
               </div>
             )}
 
-            <div className="container my-5">
+            <div className="container my-5" >
               <div className="row">
                 {allNoti &&
                   allNoti.map((d, _id) => {
@@ -141,4 +141,4 @@ const Notification = ({ adminData }) => {
   );
 };
 
-export default Notification;
+export default TestNotification;

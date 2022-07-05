@@ -5,8 +5,6 @@ import bgImage from "../../Images/job-image.jpg";
 import bgImg from "../../Images/first.png";
 import Header from "../Homepage/Header";
 import { Link } from "react-router-dom";
-import UserHeader from "../UserDashboard/UserHeader";
-import { parseJwt } from "../../utils/parseJwt";
 import { toast } from "react-toastify";
 
 const SuccessMsg = () => {
@@ -26,16 +24,12 @@ const SuccessMsg = () => {
     </>
   );
 };
-const Hiring = () => {
+const TestHiring = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setPhone] = useState("");
   const [jobType, setJobType] = useState("");
   const [resume, setImage] = useState("");
-
-  const token_data = localStorage.getItem("token");
-  const token = parseJwt(token_data);
-  const user = token?.user?._id;
 
   const {
     register,
@@ -55,6 +49,7 @@ const Hiring = () => {
     axios
       .post("http://localhost:5000/job-form/submit", jobForm)
       .then((result) => {
+        window.location.href="/test-notification"
         console.log(result.data);
         toast.success(<SuccessMsg />, {
           position: toast.POSITION.TOP_RIGHT,
@@ -86,22 +81,15 @@ const Hiring = () => {
           position: "relative",
         }}
       >
-        {user ? <UserHeader /> : <Header />}
-
+<Header />
         <div className="bread-crumb-section">
           <h1 className="text-center text-white my-4 fw-bold">Job Form</h1>
           <div className="row text-center">
-            {
-              user ? (
-                <Link className="text-success fw-bold text-decoration-none" to="/user-dashboard">
-              Dashboard &gt;&gt; <span className="text-white">Job Form</span>
-            </Link>
-              ): (
+            
                 <Link className="text-success fw-bold text-decoration-none" to="/">
               Home &gt;&gt; <span className="text-white">Job Form</span>
             </Link>
-              )
-            }
+             
           </div>
         </div>
       </div>
@@ -117,7 +105,7 @@ const Hiring = () => {
           //   position: "relative",
         }}
       >
-        <div className="row">
+        <div className="row" id="job-form">
           <div className="col-md-12">
             <div className="row  justify-content-center">
               <h1 className="text-center py-5" style={{ color: "#1F8977" }}>
@@ -136,34 +124,54 @@ const Hiring = () => {
                     encType="multipart/form-data"
                     className="align-items-center"
                   >
-                    <label
-                        htmlFor="serviceCategoryName"
-                        className="fw-bold ps-5 pt-4"
-                      >
+
+
+
+<div className="form-group px-5 py-4">
+                      <label htmlFor="jobType" style={{ fontWeight: "bold" }}>
                         Job Category <span className="text-danger">*</span>
                       </label>
-                      <div className="input-group px-5 pb-4">
-                        <select
-                          style={{
-                            border: "1px solid green",
-                            borderRadius: "5px",
-                            width: "100%",
-                            padding: "5px",
-                          }}
-                          value={jobType}
-                          onChange={(e) => setJobType(e.target.value)}
-                          className="p-2"
-                        >
-                          <option value="">
-                            Please Choose Job Type
-                          </option>
-                                <option value="House Cleaner">House Cleaner</option>
-                                <option value="Painter">Painter</option>
-                                <option value="Kitchen Cleaner">Kitchen Cleaner</option>
-                                <option value="Glass Cleaner">Glass Cleaner</option>
-                                <option value="Mitrapark">Mitrapark</option>
-                        </select>
-                      </div>
+                      <input
+                        type="text"
+                        className={`form-control ${
+                          errors.setJobType && "invalid"
+                        }`}
+                        placeholder="Enter Job Type"
+                        autoComplete="nope"
+                        {...register("setJobType", {
+                          required: "job category name is required",
+                          minLength: {
+                            value: 3,
+                            message: "job category name is too short",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message: "full name is too long",
+                          },
+                        })}
+                        value={jobType}
+                        onChange={(e) => setJobType(e.target.value)}
+                        style={{
+                          border: "1px solid green",
+                          borderRadius: "5px",
+                          width: "100%",
+                          padding: "5px",
+                        }}
+                        id="jobCategory"
+                      />
+                      {/* for displaying error message on validating */}
+                      {errors.setJobType && (
+                        <small className="text-danger">
+                          {errors.setJobType.message}
+                        </small>
+                      )}
+                    </div>
+
+
+
+
+
+
 
                     {/* input field for full name */}
                     <div className="form-group px-5 py-4">
@@ -196,6 +204,7 @@ const Hiring = () => {
                           width: "100%",
                           padding: "5px",
                         }}
+                        id="fullname"
                       />
                       {/* for displaying error message on validating */}
                       {errors.setFullName && (
@@ -212,17 +221,15 @@ const Hiring = () => {
                       </label>
                       <input
                         type="text"
-                        className={`form-control ${
-                          errors.setEmail && "invalid"
-                        }`}
+                        className="form-control"
                         placeholder="Your email address"
                         autoComplete="nope"
                         {...register("setEmail", {
                           required: "Email is required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid email address",
-                          },
+                        //   pattern: {
+                        //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        //     message: "Invalid email address",
+                        //   },
                         })}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -232,6 +239,7 @@ const Hiring = () => {
                           width: "100%",
                           padding: "5px",
                         }}
+                        id="email"
                       />
                       <small className="text-muted fst-italic">
                         We'll send you relevant Jobs in your Email
@@ -281,6 +289,7 @@ const Hiring = () => {
                           width: "100%",
                           padding: "5px",
                         }}
+                        id="phone"
                       />
                       <small className="text-muted fst-italic">
                         Recruiter will call you on this number
@@ -313,6 +322,7 @@ const Hiring = () => {
                           width: "100%",
                           padding: "5px",
                         }}
+                        id="image"
                       />
                       {errors.setImage && (
                         <small className="text-danger">
@@ -352,6 +362,7 @@ const Hiring = () => {
                         textTransform: "uppercase",
                         fontWeight: "bold",
                       }}
+                      id="submitBtn"
                     >
                       Submit Now
                     </button>
@@ -365,4 +376,4 @@ const Hiring = () => {
     </>
   );
 };
-export default Hiring;
+export default TestHiring;
