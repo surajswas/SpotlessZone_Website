@@ -112,7 +112,7 @@ const Items = ({ cartId, productId, productQuantity }) => {
       <tr>
         <td>
           <img
-            src={"http://localhost:5000/" + productId.pic}
+            src={"http://localhost:5000/" + productId?.pic}
             alt=""
             className="img-fluid"
             style={{
@@ -122,11 +122,11 @@ const Items = ({ cartId, productId, productQuantity }) => {
             }}
           />
         </td>
-        <td>{productId.pname}</td>
+        <td>{productId?.pname}</td>
         <td className="d-flex">
           <span
             // onClick={() => dispatch({ type: "DECREMENT" })}
-            onClick={(e) => decreaseQuantity(e, productId._id)}
+            onClick={(e) => decreaseQuantity(e, productId?._id)}
             style={{
               display: "inline-block",
               textAlign: "center",
@@ -156,7 +156,7 @@ const Items = ({ cartId, productId, productQuantity }) => {
             }}
           />
           <span
-            onClick={(e) => increaseQuantity(e, productId._id)}
+            onClick={(e) => increaseQuantity(e, productId?._id)}
             // onClick={() => dispatch({ type: "INCREMENT" })}
             style={{
               display: "inline-block",
@@ -180,7 +180,7 @@ const Items = ({ cartId, productId, productQuantity }) => {
               marginLeft: "50px",
             }}
           >
-            {productId.pprice}
+            {productId?.pprice}
           </span>
         </td>
         <td>
@@ -190,7 +190,7 @@ const Items = ({ cartId, productId, productQuantity }) => {
               marginLeft: "30px",
             }}
           >
-            {(changeQty || productQuantity) * productId.pprice}
+            {(changeQty || productQuantity) * productId?.pprice}
           </span>
         </td>
 

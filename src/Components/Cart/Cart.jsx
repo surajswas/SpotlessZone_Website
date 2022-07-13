@@ -41,7 +41,7 @@ const ProductCart = () => {
       pdata
         .reduce(
           (acc, curr) =>
-            acc + Number(curr.productQuantity * curr.productId.pprice),
+            acc + Number(curr.productQuantity * curr.productId?.pprice),
           0
         )
         .toFixed(2)

@@ -20,7 +20,7 @@ const UserDashboard = () => {
   const user = token?.user._id;
 
 
-  const [points, setPoints] = useState(user.points);
+  const [points, setPoints] = useState(token.user.points);
   const [rewarded, setRewarded] = useState({ rewarded: false, reward: 0 });
   console.log(user.points);
   // get user form the token
