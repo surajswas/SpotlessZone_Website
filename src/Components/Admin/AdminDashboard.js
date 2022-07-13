@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./AdminDashboard.css";
 import {
   ResponsiveContainer,
@@ -10,7 +10,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
@@ -67,11 +67,16 @@ const ddata = [
 ];
 // weekly like data here
 const AdminDashboard = ({ adminData }) => {
+  const { pid } = useParams();
+
   const [noti, setNoti] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [orders, setOrders] = React.useState([]);
   const [cart, setCart] = React.useState([]);
   const [productQtyCart, setProductQtyCart] = React.useState([]);
+  const [reviews, setReviews] = React.useState(0);
+  const [productData, setProductData] = React.useState([]);
+
   useEffect(() => {
     //   for all notification either visible or not
     axios
@@ -122,7 +127,7 @@ const AdminDashboard = ({ adminData }) => {
       .get("http://localhost:5000/get-total-products-cart")
       .then((response) => {
         if (response) {
-          console.log(response.data[0].productQuantity);
+          // console.log(response.data[0].productQuantity);
           setCart(response.data);
         } else {
           console.log("Something went wrong");
@@ -131,23 +136,40 @@ const AdminDashboard = ({ adminData }) => {
       .catch(() => {
         console.log("error occur");
       });
-    // for total price
-  },[]);
-  useEffect(()=>{
+    axios
+      .get("http://localhost:5000/get/product")
+      .then((result) => {
+        setProductData(result.data);
+      })
+      .catch((e) => {
+        console.log("Something Went Wrong!!");
+      });
+  }, [productData]);
+
+  useEffect(() => {
     calculation();
-  })
+    reviewCal();
+  });
   // calculating total products number in cart
   const calculation = () => {
     setProductQtyCart(
       cart.map((x) => x.productQuantity).reduce((x, y) => x + y, 0)
     );
   };
+
+  const reviewCal = () => {
+    const totalReviews = productData
+      .map((val) => val?.reviewandrating?.length)
+      .reduce((x, y) => x + y, 0);
+    setReviews(totalReviews);
+  };
+
   return (
     <>
       <div className="container-fluid ps-0 py-3 bg-light">
-        <AdminHeader noti={noti} productQtyCart={productQtyCart}/>
+        <AdminHeader noti={noti} productQtyCart={productQtyCart} />
         <div className="row py-4 me-4">
-          <AdminSidebar adminData={adminData}/>
+          <AdminSidebar adminData={adminData} />
           <div className="col-md-9">
             <div className="p-1">
               <div className="row mb-5">
@@ -186,7 +208,7 @@ const AdminDashboard = ({ adminData }) => {
                         <p className="text text-success fw-bold mb-0">40%</p>
                       </div>
                     </div>
-                    <p className="text text-dark fw-bold fs-3">90</p>
+                    <p className="text text-dark fw-bold fs-3">{reviews}</p>
                     <div className="d-flex justify-content-between align-items-center">
                       <a href="#" className="cart-link">
                         See all reviews
@@ -368,81 +390,755 @@ const AdminDashboard = ({ adminData }) => {
               </div>
               <div className="bg-white rounded p-2">
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                  <p className="text text-secondary h5 mb-0">Recent Reviews</p>
-                  <button className="btn btn-link text-decoration-none">
+                  <p className="text text-secondary h5 mb-0">
+                    Recent Ratings &amp; Reviews on different products
+                  </p>
+                  {/* <button className="btn btn-link text-decoration-none">
                     See All
-                  </button>
+                  </button> */}
                 </div>
                 <div>
                   <div className="row">
-                    <div className="col-md-6">
-                      <div className="p-1">
-                        <div className="card p-2">
-                          <div className="d-flex justify-content-start align-items-center">
-                            <img
-                              src="https://cdn.pixabay.com/photo/2017/01/15/15/49/smiley-1981935__340.png"
-                              alt=""
-                              style={{
-                                width: "40px",
-                                height: "40px",
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <div className="ms-2">
-                              <p className="text text-secondary mb-0">
-                                Vivek Sah
-                              </p>
-                              <div className="d-flex justify-content-start align-items-center">
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                (4)
-                              </div>
-                            </div>
-                          </div>
-                          <div className="my-2">
-                            <p className="text text-secondary mb-0">
-                              I love this cleaning website!
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="p-1">
-                        <div className="card p-2">
-                          <div className="d-flex justify-content-start align-items-center">
-                            <img
-                              src="https://cdn.pixabay.com/photo/2016/11/22/22/00/eyes-1850812__340.jpg"
-                              alt=""
-                              style={{
-                                width: "40px",
-                                height: "40px",
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <div className="ms-2">
-                              <p className="text text-secondary mb-0">
-                                Vivek Sah
-                              </p>
-                              <div className="d-flex justify-content-start align-items-center">
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                <i class="fa fa-star me-1"></i>
-                                (4)
-                              </div>
-                            </div>
-                          </div>
-                          <div className="my-2">
-                            <p className="text text-secondary mb-0">
-                              Great customer team!
-                            </p>
-                          </div>
-                        </div>
+                    <div className="container">
+                      <div className="row">
+                        {productData &&
+                          productData?.map((val, _id) => {
+                            return (
+                              <>
+                                {val && val?.reviewandrating.length === 0 ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <div className="col-md-10 " key={val._id}>
+                                      <div className="row">
+                                        <div className="col-md-4  align-items-center">
+                                          <div className="product-name-image-rating-stars">
+                                            <p className="fw-bold ms-2">
+                                              {val?.pname}
+                                            </p>
+
+                                            {val?.pic ? (
+                                              <img
+                                                src={
+                                                  "http://localhost:5000/" +
+                                                  val?.pic
+                                                }
+                                                alt=""
+                                                style={{
+                                                  width: "100px",
+                                                  height: "100px",
+                                                  borderRadius: "50%",
+                                                  objectFit: "cover",
+                                                }}
+                                              />
+                                            ) : (
+                                              <img
+                                                src="https://cdn.pixabay.com/photo/2017/01/15/15/49/smiley-1981935__340.png"
+                                                alt=""
+                                                style={{
+                                                  width: "40px",
+                                                  height: "40px",
+                                                  borderRadius: "50%",
+                                                  objectFit: "cover",
+                                                }}
+                                              />
+                                            )}
+                                          </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                          <div className="ratings-start d-flex flex-column gap-2">
+                                            <span className="fs-3 fw-bold">
+
+                                              {
+                                                (val?.reviewandrating
+                                                ?.map((x) => x.rating)
+                                                .reduce((x, y) => x + y, 0) /
+                                                val?.reviewandrating?.length) === 1 ? 
+                                                (val?.reviewandrating
+                                                  ?.map((x) => x.rating)
+                                                  .reduce((x, y) => x + y, 0) /
+                                                  val?.reviewandrating?.length) 
+                                                  
+                                                  
+                                                  : 
+
+
+
+
+                                                  (val?.reviewandrating
+                                                    ?.map((x) => x.rating)
+                                                    .reduce((x, y) => x + y, 0) /
+                                                    val?.reviewandrating?.length) === 2 ? 
+                                                    (val?.reviewandrating
+                                                      ?.map((x) => x.rating)
+                                                      .reduce((x, y) => x + y, 0) /
+                                                      val?.reviewandrating?.length) 
+
+
+                                                      : 
+
+
+
+                                                      (val?.reviewandrating
+                                                        ?.map((x) => x.rating)
+                                                        .reduce((x, y) => x + y, 0) /
+                                                        val?.reviewandrating?.length) === 3 ? 
+                                                        (val?.reviewandrating
+                                                          ?.map((x) => x.rating)
+                                                          .reduce((x, y) => x + y, 0) /
+                                                          val?.reviewandrating?.length) 
+
+
+
+
+                                                          : 
+
+
+
+                                                          (val?.reviewandrating
+                                                            ?.map((x) => x.rating)
+                                                            .reduce((x, y) => x + y, 0) /
+                                                            val?.reviewandrating?.length) === 4 ? 
+                                                            (val?.reviewandrating
+                                                              ?.map((x) => x.rating)
+                                                              .reduce((x, y) => x + y, 0) /
+                                                              val?.reviewandrating?.length) 
+
+
+                                                              : 
+
+                                                              (val?.reviewandrating
+                                                                ?.map((x) => x.rating)
+                                                                .reduce((x, y) => x + y, 0) /
+                                                                val?.reviewandrating?.length) === 5 ? 
+                                                                (val?.reviewandrating
+                                                                  ?.map((x) => x.rating)
+                                                                  .reduce((x, y) => x + y, 0) /
+                                                                  val?.reviewandrating?.length) 
+
+                                                                  : 
+
+                                                                  (val?.reviewandrating
+                                                                    ?.map((x) => x.rating)
+                                                                    .reduce((x, y) => x + y, 0) /
+                                                                    val?.reviewandrating?.length).toFixed(1)
+
+                                                }
+                                              <span className="text-secondary fw-normal fs-5">
+                                                /5
+                                              </span>
+                                            </span>
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length ===
+                                              1 && (
+                                              <>
+                                                <div className="stars-icons d-flex flex-row fs-4">
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i
+                                                    class="bi bi-star-fill "
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                  <i
+                                                    class="bi bi-star-fill "
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                </div>
+                                              </>
+                                            )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length >
+                                              1 &&
+                                              val?.reviewandrating
+                                                ?.map((x) => x.rating)
+                                                .reduce((x, y) => x + y, 0) /
+                                                val?.reviewandrating?.length <
+                                                2 && (
+                                                <>
+                                                  <div className="stars-icons d-flex flex-row fs-4">
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                    <i class="bi bi-star-half text-warning mx-1"></i>
+                                                    <i
+                                                      class="bi bi-star-fill "
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                    <i
+                                                      class="bi bi-star-fill "
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                    <i
+                                                      class="bi bi-star-fill "
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                  </div>
+                                                </>
+                                              )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length ===
+                                              2 && (
+                                              <>
+                                                <div className="stars-icons d-flex flex-row fs-4">
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                  <i
+                                                    class="bi bi-star-fill "
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                </div>
+                                              </>
+                                            )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length >
+                                              2 &&
+                                              val?.reviewandrating
+                                                ?.map((x) => x.rating)
+                                                .reduce((x, y) => x + y, 0) /
+                                                val?.reviewandrating?.length <
+                                                3 && (
+                                                <>
+                                                  <div className="stars-icons d-flex flex-row fs-4">
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                    <i className="bi bi-star-fill text-warning"></i>
+
+                                                    <i class="bi bi-star-half text-warning mx-1"></i>
+
+                                                    <i
+                                                      class="bi bi-star-fill "
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                    <i
+                                                      class="bi bi-star-fill mx-1"
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                  </div>
+                                                </>
+                                              )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length ===
+                                              3 && (
+                                              <>
+                                                <div className="stars-icons d-flex flex-row fs-4">
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+
+                                                  <i
+                                                    class="bi bi-star-fill "
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                </div>
+                                              </>
+                                            )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length >
+                                              3 &&
+                                              val?.reviewandrating
+                                                ?.map((x) => x.rating)
+                                                .reduce((x, y) => x + y, 0) /
+                                                val?.reviewandrating?.length <
+                                                4 && (
+                                                <>
+                                                  <div className="stars-icons d-flex flex-row fs-4">
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                    <i className="bi bi-star-fill text-warning"></i>
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+
+                                                    <i class="bi bi-star-half text-warning mx-1"></i>
+                                                    <i
+                                                      class="bi bi-star-fill mx-1"
+                                                      style={{
+                                                        color: "#e5e5e5",
+                                                      }}
+                                                    ></i>
+                                                  </div>
+                                                </>
+                                              )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length ===
+                                              4 && (
+                                              <>
+                                                <div className="stars-icons d-flex flex-row fs-4">
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+
+                                                  <i
+                                                    class="bi bi-star-fill mx-1"
+                                                    style={{ color: "#e5e5e5" }}
+                                                  ></i>
+                                                </div>
+                                              </>
+                                            )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length >
+                                              4 &&
+                                              val?.reviewandrating
+                                                ?.map((x) => x.rating)
+                                                .reduce((x, y) => x + y, 0) /
+                                                val?.reviewandrating?.length <
+                                                5 && (
+                                                <>
+                                                  <div className="stars-icons d-flex flex-row fs-4">
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                    <i className="bi bi-star-fill text-warning"></i>
+                                                    <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                    <i className="bi bi-star-fill text-warning"></i>
+
+                                                    <i class="bi bi-star-half text-warning mx-1"></i>
+                                                  </div>
+                                                </>
+                                              )}
+
+                                            {val?.reviewandrating
+                                              ?.map((x) => x.rating)
+                                              .reduce((x, y) => x + y, 0) /
+                                              val?.reviewandrating?.length ===
+                                              5 && (
+                                              <>
+                                                <div className="stars-icons d-flex flex-row fs-4">
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                  <i className="bi bi-star-fill text-warning"></i>
+                                                  <i className="bi bi-star-fill text-warning mx-1"></i>
+                                                </div>
+                                              </>
+                                            )}
+
+                                            <span>
+                                              {val?.reviewandrating?.filter(
+                                                (x) => x.rating === 1
+                                              ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 2
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 3
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 4
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 5
+                                                ).length ===
+                                                1 && (
+                                                <>
+                                                  <span>
+                                                    {val?.reviewandrating?.filter(
+                                                      (x) => x.rating === 1
+                                                    ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 2
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 3
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 4
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 5
+                                                      ).length}
+                                                    <span className="ms-1">
+                                                      Rating
+                                                    </span>
+                                                  </span>
+                                                </>
+                                              )}
+                                            </span>
+
+                                            <span>
+                                              {val?.reviewandrating?.filter(
+                                                (x) => x.rating === 1
+                                              ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 2
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 3
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 4
+                                                ).length +
+                                                val?.reviewandrating?.filter(
+                                                  (x) => x.rating === 5
+                                                ).length >
+                                                1 && (
+                                                <>
+                                                  <span>
+                                                    {val?.reviewandrating?.filter(
+                                                      (x) => x.rating === 1
+                                                    ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 2
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 3
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 4
+                                                      ).length +
+                                                      val?.reviewandrating?.filter(
+                                                        (x) => x.rating === 5
+                                                      ).length}{" "}
+                                                    <span className="ms-1">
+                                                      Ratings
+                                                    </span>
+                                                  </span>
+                                                </>
+                                              )}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div className="col-md-4 ">
+                                          <div className="five-stars-icons-numbers d-flex flex-row gap-3">
+                                            <span>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                            </span>
+                                            <span className="fw-bold">
+                                              {
+                                                val?.reviewandrating?.filter(
+                                                  (item) => item.rating === 5
+                                                ).length
+                                              }
+                                            </span>
+                                          </div>
+
+                                          <div className="four-stars-icons-numbers d-flex flex-row gap-3">
+                                            <span>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                            </span>
+                                            <span className="fw-bold">
+                                              {
+                                                val?.reviewandrating?.filter(
+                                                  (item) => item.rating === 4
+                                                ).length
+                                              }
+                                            </span>
+                                          </div>
+
+                                          <div className="three-stars-icons-numbers d-flex flex-row gap-3">
+                                            <span>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i
+                                                class="bi bi-star-fill "
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                            </span>
+                                            <span className="fw-bold">
+                                              {
+                                                val?.reviewandrating?.filter(
+                                                  (item) => item.rating === 3
+                                                ).length
+                                              }
+                                            </span>
+                                          </div>
+
+                                          <div className="two-stars-icons-numbers d-flex flex-row gap-3">
+                                            <span>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i className="bi bi-star-fill text-warning"></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill "
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                            </span>
+                                            <span className="fw-bold">
+                                              {
+                                                val?.reviewandrating?.filter(
+                                                  (item) => item.rating === 2
+                                                ).length
+                                              }
+                                            </span>
+                                          </div>
+
+                                          <div className="one-stars-icons-numbers d-flex flex-row gap-3">
+                                            <span>
+                                              <i className="bi bi-star-fill text-warning mx-1"></i>
+                                              <i
+                                                class="bi bi-star-fill "
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill "
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                              <i
+                                                class="bi bi-star-fill mx-1"
+                                                style={{ color: "#e5e5e5" }}
+                                              ></i>
+                                            </span>
+                                            <span className="fw-bold">
+                                              {
+                                                // first filter
+                                                val?.reviewandrating?.filter(
+                                                  (item) => item.rating === 1
+                                                ).length
+                                              }
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className="col-md-12">
+                                        <div className="row">
+                                          <p className="text text-secondary h5 my-3">
+                                            Products Reviews
+                                          </p>
+
+                                          {val?.reviewandrating?.map(
+                                            (x, _id) => {
+                                              return (
+                                                <>
+                                                  <div className="col-md-10 m-2">
+                                                    <div className="userimg-review-details d-flex flex-row gap-3">
+                                                      {
+                                                        x?.pic ? (
+<img
+                                                        src={
+                                                          "http://localhost:5000/" +
+                                                          x?.pic
+                                                        }
+                                                        alt=""
+                                                        className="img-fluid"
+                                                        style={{
+                                                          width: "100px",
+                                                          height: "100px",
+                                                          borderRadius: "100%",
+                                                        }}
+                                                      />
+                                                        ): (
+                                                          <img
+                                                        src="https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-20.jpg"
+                                                        alt=""
+                                                        className="img-fluid"
+                                                        style={{
+                                                          width: "100px",
+                                                          height: "100px",
+                                                          borderRadius: "100%",
+                                                        }}
+                                                      />
+                                                        )
+                                                      }
+                                                      
+                                                      <div className="reviews-detail-only d-flex flex-column gap-2">
+                                                        <p className="text text-secondary mb-0">
+                                                          {x?.userName}
+                                                        </p>
+                                                        <div className="d-flex justify-content-start align-items-center">
+                                                          {x?.rating === 1 ? (
+                                                            <>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i
+                                                                class="bi bi-star-fill "
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill "
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                            </>
+                                                          ) : x?.rating ===
+                                                            2 ? (
+                                                            <>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning"></i>{" "}
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill "
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                            </>
+                                                          ) : x?.rating ===
+                                                            3 ? (
+                                                            <>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning"></i>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i
+                                                                class="bi bi-star-fill "
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                            </>
+                                                          ) : x?.rating ===
+                                                            4 ? (
+                                                            <>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning"></i>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning"></i>
+                                                              <i
+                                                                class="bi bi-star-fill mx-1"
+                                                                style={{
+                                                                  color:
+                                                                    "#e5e5e5",
+                                                                }}
+                                                              ></i>
+                                                            </>
+                                                          ) : x?.rating ===
+                                                            5 ? (
+                                                            <>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning"></i>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                              <i class="bi bi-star-fill text-warning mx-1"></i>
+                                                            </>
+                                                          ) : null}
+                                                        </div>
+
+                                                        <p className="text text-secondary mb-0">
+                                                          {x?.review}
+                                                        </p>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </>
+                                              );
+                                            }
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <hr className="my-4" />
+                                  </>
+                                )}
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                   </div>

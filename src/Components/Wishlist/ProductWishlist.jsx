@@ -81,68 +81,71 @@ const deleteWisilist = (id) => {
       <div className="container-fluid" style={{ backgroundColor: "#d9d9d9" }}>
         <div className="row">
           <UserSideBar />
-          {pdata === 0 && ""}
           <div className="col-md-8 ">
-            <h4 className="fw-normal mt-5 mb-4">Wishlist</h4>
-        {pdata.length > 0 && (
+          {pdata.length > 0 ? (
           <>
-            
-              <table class="table table-responsive table-striped table-responsive-md">
-                <tbody style={{ justifyContent: "center" }}>
-                  {pdata
-                    ? pdata.map((items) => {
-                        return (
-                          <tr>
-                            <td>
-                              <img
-                                src={
-                                  "http://localhost:5000/" + items.product.pic
-                                }
-                                alt=""
-                                className="img-fluid"
-                                style={{
-                                  maxWidth: "100px",
-                                  maxHeight: "100px",
-                                  borderRadius: "5px",
-                                }}
-                              />
-                            </td>
-                            <td>{items.product.pname}</td>
+            <h4 className="fw-normal mt-5 mb-4">Wishlist</h4>
+          <table class="table table-responsive table-striped table-responsive-md">
+            <tbody style={{ justifyContent: "center" }}>
+              {pdata
+                ? pdata.map((items) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img
+                            src={
+                              "http://localhost:5000/" + items.product.pic
+                            }
+                            alt=""
+                            className="img-fluid"
+                            style={{
+                              maxWidth: "100px",
+                              maxHeight: "100px",
+                              borderRadius: "5px",
+                            }}
+                          />
+                        </td>
+                        <td>{items.product.pname}</td>
 
-                            <td>
-                              <span
-                                style={{
-                                  fontWeight: "600",
-                                  marginLeft: "50px",
-                                }}
-                              >
-                                {items.product.pprice}
-                              </span>
-                            </td>
-                            <td>
-                              <i
-                                onClick={(e) => addCart(e, items.product._id)}
-                                className="bi bi-cart text-success"
-                                style={{ cursor: "pointer" }}
-                              ></i>
-                            </td>
-                            <td>
-                              <i
-                                onClick={deleteWisilist.bind(this, items._id)}
-                                className="bi bi-trash text-danger"
-                                style={{ cursor: "pointer" }}
-                              ></i>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : ""}
-                </tbody>
-              </table>
-          
-          </>
-        )}
-           
+                        <td>
+                          <span
+                            style={{
+                              fontWeight: "600",
+                              marginLeft: "50px",
+                            }}
+                          >
+                            {items.product.pprice}
+                          </span>
+                        </td>
+                        <td>
+                          <i
+                            onClick={(e) => addCart(e, items.product._id)}
+                            className="bi bi-cart text-success"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </td>
+                        <td>
+                          <i
+                            onClick={deleteWisilist.bind(this, items._id)}
+                            className="bi bi-trash text-danger"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </td>
+                      </tr>
+                    );
+                  })
+                : ""}
+            </tbody>
+          </table>
+      
+      </>
+          ):(
+            <div>
+              <h1 className="text-danger mt-5">There is no Any Product Added to Your Wishlist</h1>
+            </div>
+          )
+        
+          }
           </div>
         </div>
       </div>

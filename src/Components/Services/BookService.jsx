@@ -91,7 +91,7 @@ const BookService = ({ serviceData, userData, sp }) => {
 
   return (
     <>
-      <div className="card bg-info my-5 shadow-lg p-2">
+      <div className="card my-5 shadow-lg p-2" style={{backgroundColor: "#25C6AA"}}>
         <h1 className="text-center fw-bold text-white my-3">Book Service</h1>
         <form onSubmit={handleSubmit(bookService)}>
           <div className="form-group">

@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import UserHeader from "../UserDashboard/UserHeader";
 
-
 const Checkout = () => {
   function parseJwt(token) {
     if (!token) {
@@ -27,12 +26,15 @@ const Checkout = () => {
   const [fullname, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [state, setState] = useState("");
+  const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
+  const [area, setArea] = useState("")
   const [points, setPoints] = useState(0);
   const location = useLocation();
   const [productQtyCart, setProductQtyCart] = useState([]);
-  console.log(location.state);
+
+  const [addressDetails, setBillingAddress] = useState([]);
+
 
   // khalti payment integration
   let config = {
@@ -52,8 +54,9 @@ const Checkout = () => {
             phone,
             address_detail: {
               address: address,
-              state: state,
+              region: region,
               city: city,
+              area: area,
             },
           })
           .then((res) => {
@@ -99,7 +102,6 @@ const Checkout = () => {
       .get("http://localhost:5000/get-products-cart/" + user)
       .then((result) => {
         setProductData(result.data);
-        console.log(result.data);
         // const items = result.data
         // items.map((val, ind)=>{
         //     const total = val.productId.pprice*val.productQuantity
@@ -118,8 +120,26 @@ const Checkout = () => {
         )
         .toFixed(2)
     );
+    billingAddress();
   }, []);
-  // console.log(totalprice)
+
+  const billingAddress = () => {
+    axios
+      .get("http://localhost:5000/show-own-delivery-address/" + user)
+      .then((response) => {
+        setBillingAddress(response.data)
+        setFullName(response.data?.fullname)
+        setPhone(response.data?.phone)
+        setAddress(response.data?.address_detail?.address)
+        setRegion(response.data?.address_detail?.region)
+        setCity(response.data?.address_detail?.city)
+        setArea(response.data?.address_detail?.area)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // console.log(addressDetails)
   //   console.log(city);
   const discount = () => {
     const wallet = token?.user.points;
@@ -143,7 +163,6 @@ const Checkout = () => {
       location.state.map((x) => x.productQuantity).reduce((x, y) => x + y, 0)
     );
   };
-  console.log(productQtyCart);
 
   return (
     <>
@@ -163,13 +182,14 @@ const Checkout = () => {
         <UserHeader />
 
         <div className="bread-crumb-section">
-        <h1 className="text-center text-white my-4 fw-bold">Checkout Page</h1>
+          <h1 className="text-center text-white my-4 fw-bold">Checkout Page</h1>
           <div className="row text-center">
             <Link
               className="text-success fw-bold text-decoration-none"
               to="/user-dashboard"
             >
-              Dashboard &gt;&gt; <span className="text-white">Checkout Page</span>
+              Dashboard &gt;&gt;{" "}
+              <span className="text-white">Checkout Page</span>
             </Link>
           </div>
         </div>
@@ -192,7 +212,7 @@ const Checkout = () => {
                             Full Name
                           </label>
                           <input
-                            onChange={(e) => setFullName(e.target.value)}
+                            value={fullname}
                             type="text"
                             className="form-control"
                             style={{ borderRadius: "0px" }}
@@ -201,10 +221,16 @@ const Checkout = () => {
                       </div>
                       <div className="col-md-6">
                         <div className="p-1">
-                          <label htmlFor="" className="mb-2">
-                            State
+                          <label htmlFor="region" className="mb-2">
+                            Region
                           </label>
-                          <select
+                          <input
+                            value={region}
+                            type="text"
+                            className="form-control"
+                            style={{ borderRadius: "0px" }}
+                          />
+                          {/* <select
                             onChange={(e) => setState(e.target.value)}
                             className="form-select"
                             aria-label="Default select example"
@@ -216,7 +242,7 @@ const Checkout = () => {
                             <option value="Bagmati">Bagmati</option>
                             <option value="Lumbini">Lumbini</option>
                             <option value="Karnali">Karnali</option>
-                          </select>
+                          </select> */}
                         </div>
                       </div>
                     </div>
@@ -227,7 +253,7 @@ const Checkout = () => {
                             Phone no
                           </label>
                           <input
-                            onChange={(e) => setPhone(e.target.value)}
+                          value = {phone}
                             type="text"
                             className="form-control"
                             style={{ borderRadius: "0px" }}
@@ -239,8 +265,12 @@ const Checkout = () => {
                           <label htmlFor="" className="mb-2">
                             City
                           </label>
-                          <select
-                            onChange={(e) => setCity(e.target.value)}
+                         <input value = {city}
+                            type="text"
+                            className="form-control"
+                            style={{ borderRadius: "0px" }}
+                          />
+                          {/* <select
                             className="form-select"
                             aria-label="Default select example"
                             style={{ borderRadius: "0px" }}
@@ -249,7 +279,7 @@ const Checkout = () => {
                             <option value="Kathmandu">Kathmandu</option>
                             <option value="Lalitpur">Lalitpur</option>
                             <option value="Bhaktapur">Bhaktapur</option>
-                          </select>
+                          </select> */}
                         </div>
                       </div>
                     </div>
@@ -259,16 +289,11 @@ const Checkout = () => {
                           <label htmlFor="" className="mb-2">
                             Area
                           </label>
-                          <select
-                            className="form-select"
-                            aria-label="Default select example"
+                          <input value = {area}
+                            type="text"
+                            className="form-control"
                             style={{ borderRadius: "0px" }}
-                          >
-                            <option selected="">Area</option>
-                            <option value={1}>One</option>
-                            <option value={2}>Two</option>
-                            <option value={3}>Three</option>
-                          </select>
+                          />
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -276,17 +301,11 @@ const Checkout = () => {
                           <label htmlFor="" className="mb-2">
                             Address
                           </label>
-                          <select
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="form-select"
-                            aria-label="Default select example"
+                         <input value = {address}
+                            type="text"
+                            className="form-control"
                             style={{ borderRadius: "0px" }}
-                          >
-                            <option selected="">Address</option>
-                            <option value={1}>One</option>
-                            <option value={2}>Two</option>
-                            <option value={3}>Three</option>
-                          </select>
+                          />
                         </div>
                       </div>
                     </div>

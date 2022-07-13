@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import AdminHeader from "../Admin/AdminHeader";
@@ -13,27 +12,15 @@ const SuccessMsg = () => {
         <div className="row">
           <div className="col-md-12 text-center bg-gradient">
             <p className="text-dark">
-              You have successfully added new service !!! Click "OK" to
-              continue..
+              You have successfully added new service !!!
             </p>
-            <Link
-              to="/view-services"
-              className="btn btn-outline-success"
-              style={{
-                fontWeight: "bold",
-                borderRadius: "15px",
-                border: "2px solid green",
-              }}
-            >
-              OK
-            </Link>
           </div>
         </div>
       </div>
     </>
   );
 };
-const AddService = ({ adminData }) => {
+const TestAddService = ({ adminData }) => {
   const [categoryData, setCategoryData] = useState([]);
   const [serviceName, setServiceName] = useState("");
   const [serviceDesc, setServiceDesc] = useState("");
@@ -122,6 +109,7 @@ const AddService = ({ adminData }) => {
         setServicePrice("");
         setCategoryName("");
         setImage("");
+        window.location.href="/test-view-services"
         toast.success(<SuccessMsg />, {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: false,
@@ -154,36 +142,46 @@ const AddService = ({ adminData }) => {
                       onSubmit={handleSubmit(serviceAddHandler)}
                       encType="multipart/form-data"
                     >
-                      <label
-                        htmlFor="serviceCategoryName"
-                        className="fw-bold fs-4 pb-2"
-                      >
-                        Service Category
-                      </label>
-                      <div className="input-group">
-                        <select
+                     <div className="form-group">
+                        <label
+                          htmlFor="serviceName"
+                          className="fw-bold fs-4 pb-2 mt-3"
+                        >
+                          Service Category
+                        </label>
+                        <input
+                          type="text"
+                          className={`form-control ${
+                            errors.setCategoryName && "invalid"
+                          }`}
+                          placeholder="Enter service name"
+                          autoComplete="nope"
+                          // firstname : validation
+                          {...register("setCategoryName", {
+                            required: "service category name is required",
+                            minLength: {
+                              value: 3,
+                              message: "category name is too short",
+                            },
+                            maxLength: {
+                              value: 20,
+                              message: "category name is too long",
+                            },
+                          })}
                           style={{
                             border: "1px solid green",
-                            borderRadius: "5px",
-                            width: "100%",
-                            padding: "5px",
                           }}
+                          // changing data on typing and set data to service name variable and send to database
                           value={serviceCategoryName}
                           onChange={(e) => setCategoryName(e.target.value)}
-                          className="p-2"
-                        >
-                          <option value="">
-                            Please Choose Service Category
-                          </option>
-                          {/* using loop for display added category to product added form */}
-                          {categoryData.map((d) => {
-                            return (
-                              <option value={d.serviceCategoryName}>
-                                {d.serviceCategoryName}
-                              </option>
-                            );
-                          })}
-                        </select>
+                          id="categoryName"
+                        />
+                        {/* for displaying error message on validating */}
+                        {errors.setCategoryName && (
+                          <small className="text-danger">
+                            {errors.setCategoryName.message}
+                          </small>
+                        )}
                       </div>
 
                       {/* input field for product name */}
@@ -339,4 +337,4 @@ const AddService = ({ adminData }) => {
     </>
   );
 };
-export default AddService;
+export default TestAddService;

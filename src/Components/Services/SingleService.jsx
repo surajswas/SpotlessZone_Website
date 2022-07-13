@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Homepage/Header";
 import bgImg from "../../Images/first.png";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import BookService from "./BookService";
 import { parseJwt } from "../../utils/parseJwt";
+import UserHeader from "../UserDashboard/UserHeader";
+import Header from "../Homepage/Header";
 
 const SingleService = () => {
   const { sid } = useParams();
@@ -21,11 +22,10 @@ const SingleService = () => {
       });
   }, []);
 
-
-  // for token 
-  const token_data = localStorage.getItem("token")
-  const token = parseJwt(token_data)
-  const userData = token?.user
+  // for token
+  const token_data = localStorage.getItem("token");
+  const token = parseJwt(token_data);
+  const userData = token?.user;
 
   return (
     <>
@@ -42,7 +42,7 @@ const SingleService = () => {
           position: "relative",
         }}
       >
-        <Header />
+        {userData?._id ? <UserHeader /> : <Header />}
 
         <div className="bread-crumb-section">
           <h1 className="text-center text-white my-4 fw-bold">
@@ -50,7 +50,10 @@ const SingleService = () => {
           </h1>
           <div className="row text-center">
             <Link className="text-success fw-bold text-decoration-none" to="/">
-              Home &gt;&gt;{" "}
+              Dashboard &gt;&gt;{" "}
+              <span className="text-white">
+                {singleServiceData.serviceCategoryName} &gt;&gt;
+              </span>
               <span className="text-white">
                 {singleServiceData.serviceName}
               </span>

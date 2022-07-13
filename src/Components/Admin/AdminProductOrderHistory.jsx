@@ -1,12 +1,14 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import bgImg from "../../Images/first.png";
 import { parseJwt } from "../../utils/parseJwt";
-import UserHeader from "../UserDashboard/UserHeader";
-import UserSideBar from "./UserSideBar";
+import AdminHeader from "./AdminHeader";
+import AdminSidebar from "./AdminSidebar";
 
-const ProductOrderHistory = () => {
+const AdminProductOrderHistory = ({ adminData }) => {
   const [productOrder, setProductOrder] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [productQtyCart, setProductQtyCart] = useState([]);
+  const [unSeenNoti, setUnseenNoti] = useState([]);
 
   const token_data = localStorage.getItem("token");
   const token = parseJwt(token_data);
@@ -16,49 +18,65 @@ const ProductOrderHistory = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/show-own-all-orders/${user}`)
+      .get(`http://localhost:5000/all-orders`)
       .then((result) => {
-        console.log(result.data);
         setProductOrder(result.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    axios
+      .get("http://localhost:5000/get-total-products-cart")
+      .then((response) => {
+        if (response) {
+          console.log(response.data[0].productQuantity);
+          setCart(response.data);
+        } else {
+          console.log("Something went wrong");
+        }
+      })
+
+      .catch(() => {
+        console.log("error occur");
+      });
+    axios
+      .get("http://localhost:5000/service/all-noti-unseen")
+      .then((response) => {
+        setUnseenNoti(response.data);
+      })
+
+      .catch(() => {
+        console.log("error occur");
+      });
+  }, [unSeenNoti]);
+
+  useEffect(() => {
+    calculation();
+  });
+  // calculating total products number in cart
+  const calculation = () => {
+    setProductQtyCart(
+      cart.map((x) => x.productQuantity).reduce((x, y) => x + y, 0)
+    );
+  };
   return (
     <>
-      <div
-        className="container-fluid homeImg py-3"
-        style={{
-          paddingTop: 70,
-          backgroundColor: "#ebebeb",
-          background: `url(${bgImg})`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          height: "30vh",
-          backgroundSize: "cover",
-          position: "relative",
-        }}
-      >
-        <UserHeader />
-      </div>
+      <div className="container-fluid ps-0 py-3">
+        <AdminHeader noti={unSeenNoti} productQtyCart={productQtyCart} />
 
-      <div
-        className="container-fluid py-5"
-        style={{ backgroundColor: "#d9d9d9" }}
-      >
-        <div className="row">
-          <UserSideBar />
+        <div className="row py-4 me-4">
+          <AdminSidebar adminData={adminData} />
+
           <div className="col-md-9">
-            <div
-              className="container p-4 mt-5 orderContainer"
-              style={{ backgroundColor: "#f8f9fa" }}
-            >
-              <div className="row">
-                <div className="text">
-                  <h1>Orders</h1>
+            {productOrder.length === 0 ? (
+              <div className="container">
+                <div className="row">
+                  <div className="col-md-10 col-12">
+                    <h3 className="m-5">There is no any new orders...</h3>
+                  </div>
                 </div>
               </div>
+            ) : (
               <div
                 className="row m-0 p-0"
                 style={{ backgroundColor: "#fffcf7", borderRadius: "10px" }}
@@ -88,7 +106,7 @@ const ProductOrderHistory = () => {
                       <th scope="col">Address</th>
                       <th scope="col">Order ID</th>
                       <th scope="col">Date</th>
-                      <th scope="col">Cost</th>
+                      <th scope="col">Total Cost</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
@@ -97,17 +115,17 @@ const ProductOrderHistory = () => {
                       productOrder.map((proOrder, _id) => {
                         return (
                           <tr key={proOrder._id}>
-                            <td>{proOrder?.fullname}</td>
+                            <td>{proOrder.fullname}</td>
                             <td>
-                              {proOrder?.address_detail?.region +
+                              {proOrder.address_detail.address +
                                 " , " +
-                                proOrder?.address_detail?.city +
+                                proOrder.address_detail.state +
                                 " , " +
-                                proOrder?.address_detail?.area+ " , "+ proOrder?.address_detail?.address}
+                                proOrder.address_detail.city}
                             </td>
-                            <td>{proOrder?._id}</td>
-                            <td>{proOrder?.orderAt}</td>
-                            <td>Rs. {proOrder?.total}</td>
+                            <td>{proOrder._id}</td>
+                            <td>{proOrder.orderAt}</td>
+                            <td>Rs. {proOrder.total}</td>
                             <td
                               className="fw-bold text-info"
                               style={{
@@ -124,7 +142,7 @@ const ProductOrderHistory = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -132,4 +150,4 @@ const ProductOrderHistory = () => {
   );
 };
 
-export default ProductOrderHistory;
+export default AdminProductOrderHistory;

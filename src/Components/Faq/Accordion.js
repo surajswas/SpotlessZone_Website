@@ -69,7 +69,8 @@ const Accordion = () => {
                 className="text-success fw-bold text-decoration-none"
                 to="/user-dashboard"
               >
-                Dashboard &gt;&gt; <span className="text-white">FAQ</span>
+                Dashboard &gt;&gt; <span className="text-white">FAQ</span>{" "}
+                &gt;&gt; <span className="text-white">Service</span>
               </Link>
             ) : (
               <Link
@@ -85,7 +86,7 @@ const Accordion = () => {
       <MDBContainer>
         <div className="main my-5 p-4">
           <div className="row">
-            <div className="heading col-md-4">
+            <div className="heading col-md-4 mt-3">
               <h4>
                 Have a <span className="text-white">Question?</span>{" "}
               </h4>
@@ -133,7 +134,9 @@ const Accordion = () => {
       <div className="container contactus mb-5">
         <h4>Still have a question?</h4>
         <p>Can't find the answer? please contact us.</p>
-        <button> Contact Us</button>
+        <Link to="/contactus">
+          <button> Contact Us</button>
+        </Link>
       </div>
     </>
   );

@@ -40,7 +40,7 @@ import AdminBlogDetail from "../Components/Admin/AdminBlogDetail";
 import AdminBlogHome from "../Components/Admin/AdminBlogHome";
 import AdminProducts from "../Components/Products/AdminViewProducts";
 import AdminUpdateProduct from "../Components/Products/AdminUpdateproduct";
-import Notification from "../Components/Admin/Notification";
+import TestNotification from "../Components/Admin/Notification";
 import ToolTip from "../Components/ToolTIp";
 import Gallery from "../Components/galleryy/Gallery";
 import Checkout from "../Components/BuyProduct/Checkout";
@@ -60,7 +60,15 @@ import ServiceSearch from "../Components/Search/ServiceSearch";
 import ProductOrderHistory from "../Components/Profile/ProductOrderHistory";
 import ProductWishlist from "../Components/Wishlist/ProductWishlist";
 import AddressBook from "../Components/Profile/AddressBook";
-import { UserProvider } from "../Components/context/UserContext";
+import AdminProductOrderHistory from "../Components/Admin/AdminProductOrderHistory";
+import AddAddressBook from "../Components/Profile/AddAddressBook";
+import ReviewPage from "../Components/Profile/reviewPage";
+import EditAddress from "../Components/Profile/EditAddress";
+import TestViewProduct from "../Components/Products/TestViewProduct";
+import TestAddproduct from "../Components/Products/TestAddProduct";
+import TestAddService from "../Components/Services/TestAddService";
+import TestViewAdminService from "../Components/Services/TestViewService";
+import TestHiring from "../Components/Hiring/TestHiring";
 
 
 export const Container = () => {
@@ -72,7 +80,6 @@ export const Container = () => {
     <>
       <ToastContainer />
 
-      <UserProvider>
         <Routes>
           <Route path="/tooltip" element={<ToolTip />} />
           {/* for admin purpose only */}
@@ -135,6 +142,11 @@ export const Container = () => {
                 path="/product-order-history"
                 element={<ProductOrderHistory />}
               ></Route>
+<Route
+              path="/all-product-order-history"
+              element={<AdminProductOrderHistory adminData={decodeUser.user} />}
+            ></Route>
+
 
               <Route
                 path="/add-service-category"
@@ -162,21 +174,27 @@ export const Container = () => {
             </>
           )}
 
-          {/* for customer activity only */}
-          {token && decodeUser.user?.role === "user" && (
-            <>
-              <Route path="/all-services" element={<AllServices />}></Route>
-              <Route
-                path="/user-dashboard"
-                element={<UserDashboard userData={decodeUser.user} />}
-              ></Route>
-              <Route path="/cart" element={<ProductCart />}></Route>
-              <Route path="/profile-creation" element={<UserProfile />}></Route>
-              <Route path="/edit-profile" element={<EditProfile />}></Route>
-              <Route path="/view-profile" element={<UserProfileView />}></Route>
-              <Route path="/product-order-history" element={<ProductOrderHistory />}></Route>
-              <Route path="/product-wishlist" element={<ProductWishlist />}></Route>
-              <Route path="/address-book" element={<AddressBook />}></Route>
+        {/* for customer activity only */}
+        {token && decodeUser.user?.role === "user" && (
+          <>
+            <Route path="/all-services" element={<AllServices />}></Route>
+            <Route
+              path="/user-dashboard"
+              element={<UserDashboard  userData={decodeUser.user}/>}
+            ></Route>
+            <Route path="/cart" element={<ProductCart />}></Route>
+            <Route path="/profile-creation" element={<UserProfile />}></Route>
+            <Route path="/edit-profile" element={<EditProfile />}></Route>
+            <Route path="/view-profile" element={<UserProfileView />}></Route>
+            <Route path="/product-order-history" element={<ProductOrderHistory />}></Route>
+            <Route path="/product-wishlist" element={<ProductWishlist />}></Route>
+            <Route path="/address-book" element={<AddressBook />}></Route>
+            <Route path="/add-address-book" element={<AddAddressBook />}></Route>
+            <Route path="/show-own-reviews" element={<ReviewPage />}></Route>
+            <Route path="/edit-address" element={<EditAddress />}></Route>
+
+
+
 
 
 
@@ -262,8 +280,42 @@ export const Container = () => {
           {/* pass reset */}
           <Route path="/password-reset/:id/:token" element={<PasswordReset />} />
 
-        </Routes>
-      </UserProvider>
+
+        {/* for testing */}
+        <Route
+              path="/test-add-product"
+              element={<TestAddproduct  />}
+            ></Route>
+
+<Route
+              path="/test-view-products"
+              element={<TestViewProduct  />}
+            ></Route>
+
+<Route
+              path="/test-add-service"
+              element={<TestAddService  />} 
+            ></Route>
+
+
+<Route
+              path="/test-view-services"
+              element={<TestViewAdminService  />} 
+            ></Route>
+
+<Route
+              path="/test-job-form-submit"
+              element={<TestHiring  />} 
+            ></Route>
+
+
+
+<Route
+              path="/test-notification"
+              element={<TestNotification />}
+            ></Route>
+
+      </Routes>
     </>
   );
 };
