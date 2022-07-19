@@ -14,14 +14,32 @@ const UserProfile = () => {
   const id = token?.user._id;
 
   const [userdata, setuserdata] = React.useState({});
+  const [addressData, setAddressData] = React.useState({});
+  const [billingData, setBillingData] = React.useState({});
 
   const getProfile = () => {
     axios.get("http://localhost:5000/getprofile/" + id).then((data) => {
       setuserdata(data.data);
     });
   };
+  const getAddress = () => {
+    axios
+      .get(`http://localhost:5000/show-own-delivery-address/${id}`)
+      .then((res) => {
+        setAddressData(res.data);
+        // console.log(res.data);
+      })
+      .catch((e) => [console.log(e)]);
+  };
   useEffect(() => {
     getProfile();
+    getAddress();
+    axios
+      .get(`http://localhost:5000/show-own-order/${id}`)
+      .then((res) => {
+        setBillingData(res.data);
+      })
+      .catch((e) => [console.log(e)]);
   }, [userdata]);
   return (
     <>
@@ -73,23 +91,92 @@ const UserProfile = () => {
                 className="col-md-7 bg-white d-flex"
                 style={{ borderRadius: "5px" }}
               >
-                <div className="container p-3">
-                  <p>
-                    Address Book <span>|</span>{" "}
-                    <Link
-                      to="/user-dashboard"
-                      className="text-decoration-none fw-bold"
-                      style={{ color: "teal" }}
-                    >
-                      ADD
-                    </Link>
-                  </p>
-                  <p>Save Your Shipping Address Here</p>
-                  <i className="bi bi-geo-alt fa-2x text-success"></i>
-                </div>
+                {addressData ? (
+                  <>
+                    <div className="container p-3">
+                      <p>
+                        Address Book <span>|</span>{" "}
+                        <Link
+                          to="/edit-address"
+                          className="text-decoration-none fw-bold"
+                          style={{ color: "teal" }}
+                        >
+                          EDIT
+                        </Link>
+                      </p>
+                      <small className="text-uppercase">
+                        Default Shipping Address
+                      </small>
+                      <br />
+                      <div className="mt-2">
+                        <span className="fw-bold">{addressData?.fullname}</span>
+                        <br />
+                        <span>{addressData?.address_detail?.address}</span>
+                        <br />
+
+                        <span>
+                          {addressData?.address_detail?.region +
+                            " , " +
+                            addressData?.address_detail?.city +
+                            " , " +
+                            addressData?.address_detail?.area}
+                        </span>
+                        <br />
+                        <span>(+977) {addressData?.phone}</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="container p-3">
+                      <p>
+                        Address Book <span>|</span>{" "}
+                        <Link
+                          to="/add-address-book"
+                          className="text-decoration-none fw-bold"
+                          style={{ color: "teal" }}
+                        >
+                          ADD
+                        </Link>
+                      </p>
+
+                      <p>Save Your Shipping Address Here</p>
+                      <i className="bi bi-geo-alt fa-2x text-success"></i>
+                    </div>
+                  </>
+                )}
+
                 <div className="verticle-line"></div>
                 <div className="container p-3">
-                  <p>Save Your Billing Address Here</p>
+                  {billingData ? (
+                    <>
+                      <div className="mt-4">
+                        <small className="text-uppercase mb-5">
+                          Default Billing Address
+                        </small>
+                        <br />
+
+                        <span className="fw-bold mt-5">{billingData?.fullname}</span>
+                        <br />
+                        <span>{billingData?.address_detail?.address}</span>
+                        <br />
+
+                        <span>
+                          {billingData?.address_detail?.region +
+                            " , " +
+                            billingData?.address_detail?.city +
+                            " , " +
+                            billingData?.address_detail?.area}
+                        </span>
+                        <br />
+                        <span>(+977) {billingData?.phone}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>Save Your Billing Address Here</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

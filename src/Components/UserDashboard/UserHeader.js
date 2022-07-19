@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "../Homepage/Homepage.css";
 
 const UserHeader = () => {
-  
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [productQtyCart, setProductQtyCart] = useState([]);
@@ -18,7 +17,6 @@ const UserHeader = () => {
   const token_data = localStorage.getItem("token");
   const token = parseJwt(token_data);
   const user = token?.user?._id;
-
 
   // console.log(user);
 
@@ -32,24 +30,16 @@ const UserHeader = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/service/get-booked-service-details")
+      .get("http://localhost:5000/service/booked-service-info/" + user)
       .then((response) => {
-        if (response) {
-          // console.log(`checking 2nd cond: ${l.length}`)
-          //   setNotiData(response.data);
-          if (response.data) {
-            setServiceOrders(response.data);
-            // console.log(response.data);
-          }
-        } else {
-          console.log("all true");
-        }
+        // console.log(response.data);
+        setServiceOrders(response.data);
       })
       .catch(() => {
         console.log("error occur");
       });
     axios
-      .get("http://localhost:5000/service/pending-service-orders")
+      .get("http://localhost:5000/service/pending-service-orders/" + user)
       .then((result) => {
         // console.log(result.data.length);
         setPendingOrder(result.data.length);
@@ -66,8 +56,6 @@ const UserHeader = () => {
       .catch(() => {
         console.log("error occur");
       });
-   
-      
   }, [pendingOrder, serviceOrder]);
 
   useEffect(() => {
@@ -351,9 +339,9 @@ const UserHeader = () => {
                     backgroundColor: "#f8f9fa",
                   }}
                 >
-                  {serviceOrder.map((x) => {
+                  {serviceOrder?.map((x, _id) => {
                     return (
-                      <div>
+                      <div key={x._id}>
                         <h5>{x.serviceDetails[0].serviceName}</h5>
                         {x.deliveryStatus && (
                           <p>

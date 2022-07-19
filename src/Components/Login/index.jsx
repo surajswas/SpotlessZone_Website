@@ -133,7 +133,7 @@ const Login = () => {
               <span>Or Use Your Gmail Account</span>
             </div>
             <form
-              action=""
+              action="" id="logiForm"
               className={styles.form_container}
               onSubmit={handleSubmit}
             >
@@ -141,6 +141,7 @@ const Login = () => {
               <div className={styles.inputIcons}>
                 <i class="bi bi-envelope-fill"></i>
                 <input
+                id="email"
                   type="email"
                   placeholder="Email"
                   name="email"
@@ -154,6 +155,7 @@ const Login = () => {
               <div className={styles.inputIcons}>
                 <i class="bi bi-lock-fill"></i>
                 <input
+                id="password"
                   type="password"
                   placeholder="Password"
                   name="password"
@@ -181,6 +183,7 @@ const Login = () => {
 
               {error && <div className={styles.error_msg}>{error}</div>}
               <button
+              id="loginButton"
                 className={styles.green_btn}
                 disabled={data.email === "" && data.password === ""}
               >
