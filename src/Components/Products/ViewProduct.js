@@ -20,7 +20,7 @@ const Product = () => {
 
   return (
     <>
-      <div className="container" id="displayProducts">
+      <div className="container">
         <div className="row">
           <Link to="/addProduct" className="btn btn-primary">
             ADD PRODUCT
